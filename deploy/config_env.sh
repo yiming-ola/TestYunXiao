@@ -26,7 +26,9 @@ else
     # back up config
     current_date=$(date '+%Y-%m-%d-%H-%M-%S')
     back_up_name="default_$current_date.backup"
-    sudo cp $remote_setting /etc/nginx/sites-available/$back_up_name
+    back_up_dir="/etc/nginx/sites-available/back_up"
+    mkdir -p $back_up_dir
+    sudo cp $remote_setting "$back_up_dir/$back_up_name"
     sudo cat $local_setting > $remote_setting
 
     echo "Done updating local config. Back up file of the older config: $back_up_name"
