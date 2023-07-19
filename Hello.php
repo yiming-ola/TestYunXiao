@@ -6,4 +6,9 @@ class Hello
     {
         echo ("Hello");
     }
+
+    public static function PooPoo()
+    {
+        echo ("oh shit!");
+    }
 }
