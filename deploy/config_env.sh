@@ -5,8 +5,12 @@ fastcgi_param='fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
 nginx_fastcgi_param_path='/etc/nginx/fastcgi_params'
 local_setting='/home/webroot/origin/deploy/nginx_settings.conf'
 remote_setting='/etc/nginx/sites-available/default'
+
 # only insert when the param does not exist
-touch $remote_setting
+if ![ -e $remote_setting ]; then
+    touch $remote_setting
+fi
+
 if ! grep -qF $fastcgi_param $nginx_fastcgi_param_path; then
     echo "Inserting fastcgi_param..."
     sudo sed -i "1i\\$fastcgi_param" $nginx_fastcgi_param_path
