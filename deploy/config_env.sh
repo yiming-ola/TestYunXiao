@@ -7,7 +7,7 @@ local_setting='/home/webroot/origin/deploy/nginx_settings.conf'
 remote_setting='/etc/nginx/sites-available/default'
 
 # only insert when the param does not exist
-if ![ -e $remote_setting ]; then
+if [ ! -e $remote_setting ]; then
     touch $remote_setting
 fi
 
