@@ -11,7 +11,7 @@ if ![ -e $remote_setting ]; then
     touch $remote_setting
 fi
 
-if ! grep -qF $fastcgi_param $nginx_fastcgi_param_path; then
+if ! grep -qF "$fastcgi_param" $nginx_fastcgi_param_path; then
     echo "Inserting fastcgi_param..."
     sudo sed -i "1i\\$fastcgi_param" $nginx_fastcgi_param_path
 else
