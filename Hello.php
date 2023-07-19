@@ -9,6 +9,6 @@ class Hello
 
     public static function PooPoo()
     {
-        echo ("oh s");
+        echo ("oh shit");
     }
 }
