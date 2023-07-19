@@ -2,7 +2,7 @@
 
 class Hello
 {
-    const YY = "YMM";
+    const YY = "YMMM";
     public static function Hello()
     {
         echo ("Hello");
