@@ -7,6 +7,7 @@ local_setting='/home/webroot/origin/deploy/nginx_settings.conf'
 remote_setting='/etc/nginx/sites-available/default'
 # only insert when the param does not exist
 if ! grep -qF "$fastcgi_param" $nginx_fastcgi_param_path; then
+    echo "Inserting fastcgi_param..."
     sudo sed -i "1i\\$fastcgi_param" $nginx_fastcgi_param_path
 fi
 
@@ -16,7 +17,7 @@ if cmp -s $local_setting $remote_setting; then
 else
     echo "The content of nginx_settings.conf and sites-available default setting is different. Updating local config..."
     # back up config
-    current_date=$(date)
+    current_date=$(date '+%Y-%m-%d-%H-%M-%S')
     back_up_name="default_$current_date.backup"
     sudo cp $remote_setting /etc/nginx/sites-available/$back_up_name
     sudo cat $local_setting > $remote_setting
