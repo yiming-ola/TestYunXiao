@@ -11,11 +11,13 @@ if [ ! -e $remote_setting ]; then
     touch $remote_setting
 fi
 
+sudo ln -s $remote_setting /etc/nginx/sites-enabled/
+
 if ! grep -qF "$fastcgi_param" $nginx_fastcgi_param_path; then
     echo "Inserting fastcgi_param..."
     sudo sed -i "1i\\$fastcgi_param" $nginx_fastcgi_param_path
 else
-    echo "fastcgi_param ok."
+    echo "Fastcgi_param ok."
 fi
 
 # aligning the local nginx conifg to nginx_settings.conf
@@ -32,7 +34,7 @@ else
     # check config file
     sudo nginx -t -c $remote_setting
     if [ $? -eq 0 ]; then
-        echo "nginx configuration test passed successfully. Updating and reloading Nginx..."
+        echo "Nginx configuration test passed successfully. Updating and reloading Nginx..."
         # back up config
         sudo cp $remote_setting "$back_up_dir/$back_up_name"
         # replace nginx config
@@ -41,7 +43,7 @@ else
         sudo nginx -s reload
         echo "Done updating local config. Back up file of the older config: $back_up_name"
     else
-        echo "nginx configuration test failed!!!!"
+        echo "Nginx configuration test failed!!!!"
     fi
 fi
 
