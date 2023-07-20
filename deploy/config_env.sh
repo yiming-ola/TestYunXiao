@@ -30,15 +30,14 @@ else
     back_up_name="default_$current_date.backup"
 
     mkdir -p $back_up_dir
-
+    # back up config
+    sudo cp $remote_setting "$back_up_dir/$back_up_name"
+    # replace nginx config
+    sudo cat $local_setting > $remote_setting
     # check config file
-    sudo nginx -t -c $remote_setting
+    sudo nginx -t
     if [ $? -eq 0 ]; then
         echo "Nginx configuration test passed successfully. Updating and reloading Nginx..."
-        # back up config
-        sudo cp $remote_setting "$back_up_dir/$back_up_name"
-        # replace nginx config
-        sudo cat $local_setting > $remote_setting
         # reload nginx
         sudo nginx -s reload
         echo "Done updating local config. Back up file of the older config: $back_up_name"
