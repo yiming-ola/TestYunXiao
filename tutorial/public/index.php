@@ -1,14 +1,16 @@
 <?php
 
-use Phalcon\Di\FactoryDefault;
-use Phalcon\Autoload\Loader;
+use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Application;
-use Phalcon\Url;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Mvc\Url as UrlProvider;
 
+// Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 
+// Register an autoloader
 $loader = new Loader();
 
 $loader->registerDirs(
@@ -20,9 +22,11 @@ $loader->registerDirs(
 
 $loader->register();
 
-$container = new FactoryDefault();
+// Create a DI
+$di = new FactoryDefault();
 
-$container->set(
+// Setup the view component
+$di->set(
     'view',
     function () {
         $view = new View();
@@ -31,22 +35,21 @@ $container->set(
     }
 );
 
-$container->set(
+// Setup a base URI
+$di->set(
     'url',
     function () {
-        $url = new Url();
+        $url = new UrlProvider();
         $url->setBaseUri('/');
         return $url;
     }
 );
 
-$application = new Application($container);
+$application = new Application($di);
 
 try {
     // Handle the request
-    $response = $application->handle(
-        $_SERVER["REQUEST_URI"]
-    );
+    $response = $application->handle();
 
     $response->send();
 } catch (\Exception $e) {
