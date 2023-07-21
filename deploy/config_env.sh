@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# switch user to ecs-user
+
 # refer to https://medium.com/hackernoon/truly-atomic-deployments-with-nginx-and-php-fpm-aed8a8ac1cd9
 fastcgi_param='fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;'
 
