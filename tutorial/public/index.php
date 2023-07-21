@@ -1,4 +1,7 @@
 <?php
+define('BASE_PATH', dirname(__DIR__));
+define('APP_PATH', BASE_PATH . '/app');
+require_once BASE_PATH . '/vendor/autoload.php';
 
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
@@ -7,8 +10,7 @@ use Phalcon\Mvc\Application;
 use Phalcon\Url;
 
 // Define some absolute path constants to aid in locating resources
-define('BASE_PATH', dirname(__DIR__));
-define('APP_PATH', BASE_PATH . '/app');
+
 
 // Register an autoloader
 $loader = new Loader();
