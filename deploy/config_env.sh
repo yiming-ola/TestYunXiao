@@ -51,4 +51,20 @@ fi
 # deleting back up files older than 14 days.
 find $back_up_dir -type f -mtime +14 -exec rm {} \;
 
-# link to application path
+# link the new build (current directory) to application path
+
+# Get the full path of the script
+script_path="$0"
+
+# Extract the directory path from the script path
+script_directory=$(dirname "$script_path")
+
+# Get the parent directory of the script's directory, should be something like /etc/ecs-user/webroot_new_builds/${TIMESTAMP}
+parent_directory=$(dirname "$script_directory")
+
+new_build_dir="$parent_directory/tutorial/public"
+
+service_folder='/home/ecs-user/webroot/ym_try_try'
+
+ln -sf $new_build_dir $service_folder
+echo "Linked $new_build_dir to $service_folder"
