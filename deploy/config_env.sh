@@ -66,5 +66,6 @@ new_build_dir="$parent_directory/tutorial/public"
 
 service_folder='/home/ecs-user/webroot/ym_try_try'
 
-ln -sf $new_build_dir $service_folder
+ln -snf $new_build_dir $service_folder
+
 echo "Linked $new_build_dir to $service_folder"
