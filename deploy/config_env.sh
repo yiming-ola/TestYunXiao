@@ -65,7 +65,7 @@ find $back_up_dir -type f -mtime +14 -exec rm {} \;
 
 # link the new build to application path
 
-new_root_dir="$build_directory/tutorial/public"
+new_root_dir="$build_directory/tutorial"
 
 service_folder='/home/ecs-user/webroot/ym_try_try'
 
