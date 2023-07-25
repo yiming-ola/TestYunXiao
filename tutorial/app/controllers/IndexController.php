@@ -6,6 +6,6 @@ class IndexController extends Controller
 {
     public function indexAction()
     {
-        return '<h1>Hello! Welcome to atomic php!, current time: ' . time() . '</h1>';
+        return '<h1>Hello! Welcome to atomic php! current time: ' . time() . '</h1>';
     }
 }
