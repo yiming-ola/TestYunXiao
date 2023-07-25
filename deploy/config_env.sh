@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # switch user to ecs-user
+su ecs-user
 
 # Get the full path of the script
 script_path="$0"
