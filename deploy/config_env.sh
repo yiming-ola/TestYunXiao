@@ -79,6 +79,7 @@ echo "Linked $new_root_dir to $service_folder"
 
 # delete other builds
 builds_dir=$(dirname "$build_directory")
+
 echo "current build: $build_name, builds dir: $builds_dir"
-# find $builds_dir -type d ! -name "$build_directory" -exec rm -r {} \;
+
 find $builds_dir -maxdepth 1 ! -name $build_name ! -name $(basename "$builds_dir") -exec rm -r {} \;
