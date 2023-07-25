@@ -10,6 +10,7 @@ script_directory=$(dirname "$script_path")
 
 # Get the parent directory of the script's directory, should be something like /etc/ecs-user/webroot_new_builds/${TIMESTAMP}
 build_directory=$(dirname "$script_directory")
+build_name=$(basename "$build_directory")
 
 local_setting="$script_directory/nginx_settings.conf"
 remote_setting='/home/ecs-user/.local/etc/nginx/sites-available/default'
@@ -76,4 +77,4 @@ echo "Linked $new_root_dir to $service_folder"
 # delete other builds
 builds_dir=$(dirname "$build_directory")
 # find $builds_dir -type d ! -name "$build_directory" -exec rm -r {} \;
-find $builds_dir -type d ! -name "$build_directory" -print;
+find $builds_dir -type d ! -name "$build_name" -print;
