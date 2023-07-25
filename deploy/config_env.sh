@@ -76,6 +76,6 @@ echo "Linked $new_root_dir to $service_folder"
 
 # delete other builds
 builds_dir=$(dirname "$build_directory")
-echo "current build: $build_name"
+echo "current build: $build_name, builds dir: $builds_dir"
 # find $builds_dir -type d ! -name "$build_directory" -exec rm -r {} \;
-find $builds_dir -type d ! -name $build_name -print;
+find $builds_dir -type d ! -name "$build_name" -print;
