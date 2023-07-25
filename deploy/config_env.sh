@@ -2,7 +2,16 @@
 
 # switch user to ecs-user
 
-local_setting='/home/ecs-user/webroot/deploy/nginx_settings.conf'
+# Get the full path of the script
+script_path="$0"
+
+# Extract the directory path from the script path
+script_directory=$(dirname "$script_path")
+
+# Get the parent directory of the script's directory, should be something like /etc/ecs-user/webroot_new_builds/${TIMESTAMP}
+parent_directory=$(dirname "$script_directory")
+
+local_setting="$script_directory/nginx_settings.conf"
 remote_setting='/home/ecs-user/.local/etc/nginx/sites-available/default'
 enabled_setting='/home/ecs-user/.local/etc/nginx/sites-enabled/'
 back_up_dir='/home/ecs-user/.local/etc/nginx/sites-available/back_up'
@@ -51,16 +60,7 @@ fi
 # deleting back up files older than 14 days.
 find $back_up_dir -type f -mtime +14 -exec rm {} \;
 
-# link the new build (current directory) to application path
-
-# Get the full path of the script
-script_path="$0"
-
-# Extract the directory path from the script path
-script_directory=$(dirname "$script_path")
-
-# Get the parent directory of the script's directory, should be something like /etc/ecs-user/webroot_new_builds/${TIMESTAMP}
-parent_directory=$(dirname "$script_directory")
+# link the new build to application path
 
 new_build_dir="$parent_directory/tutorial/public"
 
