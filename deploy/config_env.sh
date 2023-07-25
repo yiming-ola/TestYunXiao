@@ -9,7 +9,7 @@ script_path="$0"
 script_directory=$(dirname "$script_path")
 
 # Get the parent directory of the script's directory, should be something like /etc/ecs-user/webroot_new_builds/${TIMESTAMP}
-parent_directory=$(dirname "$script_directory")
+build_directory=$(dirname "$script_directory")
 
 local_setting="$script_directory/nginx_settings.conf"
 remote_setting='/home/ecs-user/.local/etc/nginx/sites-available/default'
@@ -65,10 +65,15 @@ find $back_up_dir -type f -mtime +14 -exec rm {} \;
 
 # link the new build to application path
 
-new_build_dir="$parent_directory/tutorial/public"
+new_root_dir="$build_directory/tutorial/public"
 
 service_folder='/home/ecs-user/webroot/ym_try_try'
 
-ln -sf $new_build_dir $service_folder
+ln -sf $new_root_dir $service_folder
 
-echo "Linked $new_build_dir to $service_folder"
+echo "Linked $new_root_dir to $service_folder"
+
+# delete other builds
+builds_dir=$(dirname "$build_directory")
+# find $builds_dir -type d ! -name "$build_directory" -exec rm -r {} \;
+find $builds_dir -type d ! -name "$build_directory" -print;
