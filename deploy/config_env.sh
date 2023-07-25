@@ -53,6 +53,8 @@ else
         # reload nginx
         nginx -s reload
         echo "Done updating local config. Back up file of the older config: $back_up_name"
+        # ensure permissions to files
+        chmod -R 755 $build_directory
     else
         echo "Nginx configuration test failed!!!! restore changes to the config."
 
