@@ -23,6 +23,9 @@ fi
 # link settings
 ln -s $remote_setting $enabled_setting
 
+# Enable errexit option
+set -e
+
 # aligning the local nginx conifg to nginx_settings.conf
 if cmp -s $local_setting $remote_setting; then
     echo "No difference found between nginx_settings.conf and sites-available default settings, skip rewritting local config."
