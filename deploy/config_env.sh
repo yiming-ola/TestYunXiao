@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# switch user to ecs-user
-su ecs-user
-
 # Get the full path of the script
 script_path="$0"
 
@@ -14,16 +11,17 @@ build_directory=$(dirname "$script_directory")
 build_name=$(basename "$build_directory")
 
 local_setting="$script_directory/nginx_settings.conf"
-remote_setting='/home/ecs-user/.local/etc/nginx/sites-available/default'
+sites_available='/home/ecs-user/.local/etc/nginx/sites-available'
 enabled_setting='/home/ecs-user/.local/etc/nginx/sites-enabled/'
-back_up_dir='/home/ecs-user/.local/etc/nginx/sites-available/back_up'
+remote_setting="$sites_available/default"
+back_up_dir="$sites_available/back_up"
 
 if [ ! -e $remote_setting ]; then
-    touch $remote_setting
+    mkdir -p $sites_available
+    echo "# new empty settings." > $remote_setting
+    # link settings
+    ln -s $remote_setting $enabled_setting
 fi
-
-# link settings
-ln -s $remote_setting $enabled_setting
 
 # Enable errexit option
 set -e
@@ -51,7 +49,8 @@ else
     if [ $? -eq 0 ]; then
         echo "Nginx configuration test passed successfully. Updating and reloading Nginx..."
         # reload nginx
-        nginx -s reload
+        # sudo nginx -s reload
+        sudo nginx -s reload
         echo "Done updating local config. Back up file of the older config: $back_up_name"
         # ensure permissions to files
         chmod -R 755 $build_directory
@@ -64,14 +63,14 @@ else
     fi
 fi
 
-# deleting back up files older than 14 days.
-find $back_up_dir -type f -mtime +14 -exec rm {} \;
+# deleting back up files older than 3 days.
+sudo find $back_up_dir -type f -mtime +3 -exec rm {} \;
 
 # link the new build to application path
 
-new_root_dir="$build_directory/tutorial"
+new_root_dir=$build_directory
 
-service_folder='/home/ecs-user/webroot/ym_try_try'
+service_folder='/home/ecs-user/webroot/banban-for-php7'
 
 ln -sf $new_root_dir $service_folder
 
@@ -82,4 +81,4 @@ builds_dir=$(dirname "$build_directory")
 
 echo "current build: $build_name, builds dir: $builds_dir"
 
-find $builds_dir -maxdepth 1 ! -name $build_name ! -name $(basename "$builds_dir") -exec rm -r {} \;
+sudo find $builds_dir -maxdepth 1 ! -name $build_name ! -name $(basename "$builds_dir") -exec rm -r {} \;
