@@ -45,15 +45,12 @@ else
     cat $local_setting > $remote_setting
 
     # check config file
-    nginx -t
+    sudo nginx -t
     if [ $? -eq 0 ]; then
         echo "Nginx configuration test passed successfully. Updating and reloading Nginx..."
         # reload nginx
-        # sudo nginx -s reload
         sudo nginx -s reload
         echo "Done updating local config. Back up file of the older config: $back_up_name"
-        # ensure permissions to files
-        chmod -R 755 $build_directory
     else
         echo "Nginx configuration test failed!!!! restore changes to the config."
 
@@ -63,22 +60,29 @@ else
     fi
 fi
 
-# deleting back up files older than 3 days.
+# deleting back up files older than 3 days. sudo prefix is needed to use find command.
 sudo find $back_up_dir -type f -mtime +3 -exec rm {} \;
 
 # link the new build to application path
 
-new_root_dir=$build_directory
+webroot_path='/home/ecs-user/webroot/pt-oversea'
 
-service_folder='/home/ecs-user/webroot/banban-for-php7'
+current_target=''
 
-ln -sf $new_root_dir $service_folder
+if [ -e "$webroot_path" ]; then
+    current_target=$(readlink -f "$webroot_path")
+    echo "old symlink to the build: $current_target"
+fi
 
-echo "Linked $new_root_dir to $service_folder"
+# update symlink to webroot
+if ln -snf $build_directory $webroot_path; then
+    echo "New build: $build_directory, Symlink updated successfully."
+else
+    echo "Error: Symlink update failed."
+    exit 1
+fi
 
-# delete other builds
-builds_dir=$(dirname "$build_directory")
-
-echo "current build: $build_name, builds dir: $builds_dir"
-
-sudo find $builds_dir -maxdepth 1 ! -name $build_name ! -name $(basename "$builds_dir") -exec rm -r {} \;
+# delete old build
+if [ -n "$current_target" ] && [ -d $current_target ]; then
+    rm -r "$current_target"
+fi
