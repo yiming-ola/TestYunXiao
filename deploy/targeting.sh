@@ -19,13 +19,11 @@ function process_files_recursively() {
     for file in "$current_dir"/*; do
         if [ -f "$file" ]; then
             file_name=$(basename "$file")
-
-            target_file
-
             if [[ "$file_name" == "$task_file_name" ]]; then
                 dir_name=$(dirname "$file")
                 target_cmd=$(basename "$dir_name")
                 echo "Processing matching file: $file_name, target: $target_cmd"
+                break
             fi
         elif [ -d "$file" ]; then
             process_files_recursively "$file"
@@ -34,3 +32,4 @@ function process_files_recursively() {
 }
 
 process_files_recursively "$configs_dir"
+return $target_cmd
