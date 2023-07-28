@@ -10,7 +10,7 @@ script_directory=$(dirname "$script_path")
 build_directory=$(dirname "$script_directory")
 build_name=$(basename "$build_directory")
 
-local_setting="$script_directory/nginx_settings.conf"
+local_setting="$script_directory/nginx/nginx_settings.conf"
 sites_available='/home/ecs-user/.local/etc/nginx/sites-available'
 enabled_setting='/home/ecs-user/.local/etc/nginx/sites-enabled/'
 remote_setting="$sites_available/default"
