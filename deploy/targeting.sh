@@ -32,4 +32,4 @@ function process_files_recursively() {
 }
 
 process_files_recursively "$configs_dir"
-return $target_cmd
+echo $target_cmd
