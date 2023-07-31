@@ -22,7 +22,6 @@ function process_files_recursively() {
             if [[ "$file_name" == "$task_file_name" ]]; then
                 dir_name=$(dirname "$file")
                 target_cmd=$(basename "$dir_name")
-                echo "Processing matching file: $file_name, target: $target_cmd"
                 break
             fi
         elif [ -d "$file" ]; then
