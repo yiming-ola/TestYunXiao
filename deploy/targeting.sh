@@ -11,7 +11,7 @@ task_file_name="$1.conf"
 # loop through config files to locate where the task is
 configs_dir="$script_directory/supervisor"
 
-target_cmd=""
+target_cli_machine=""
 
 function process_files_recursively() {
     local current_dir="$1"
@@ -31,4 +31,5 @@ function process_files_recursively() {
 }
 
 process_files_recursively "$configs_dir"
-echo $target_cmd
+
+echo $target_cli_machine
