@@ -23,7 +23,6 @@ function process_files_recursively() {
             if [ "$file_name" == "$task_file_name" ] && [ "$found" -eq 0 ]; then
                 dir_name=$(dirname "$file")
                 target_cmd=$(basename "$dir_name")
-                echo "task:$$1 found in $dir_name"
                 found=1
                 break
             fi
