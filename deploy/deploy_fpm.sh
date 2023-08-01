@@ -86,8 +86,3 @@ fi
 if [ -n "$current_target" ] && [ -d $current_target ]; then
     rm -r "$current_target"
 fi
-
-# detect possible cmd machine.
-task_name="$1"
-targeting_script="$script_directory/targeting.sh"
-bash $targeting_script $task_name

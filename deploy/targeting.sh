@@ -8,30 +8,22 @@ script_directory=$(dirname "$script_path")
 
 task_file_name="$1.conf"
 
-# loop through config files to locate where the task is
-configs_dir="$script_directory/supervisor"
-
 target_cli_machine=""
-found=0
 
-function process_files_recursively() {
-    local current_dir="$1"
-
-    for file in "$current_dir"/*; do
+# loop through config files to locate where the task is
+for dir in "$script_directory"/*/; do
+    # check if the subdirectory contains a folder named "supervisor"
+    config_dir="$dir/supervisor"
+    if [ -d "$config_dir" ]; then
+        for file in "$config_dir"/*; do
         if [ -f "$file" ]; then
             file_name=$(basename "$file")
-            if [ "$file_name" == "$task_file_name" ] && [ "$found" -eq 0 ]; then
-                dir_name=$(dirname "$file")
-                target_cli_machine=$(basename "$dir_name")
-                found=1
-                break
+            if [ "$file_name" == "$task_file_name" ]; then
+                target_cli_machine=$(basename "$dir")
+                break;
             fi
-        elif [ -d "$file" ] && [ "$found" -eq 0 ]; then
-            process_files_recursively "$file"
         fi
-    done
-}
-
-process_files_recursively "$configs_dir"
+    fi
+done
 
 echo $target_cli_machine

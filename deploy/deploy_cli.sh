@@ -19,7 +19,7 @@ echo "current cli machine:$current_cli_machine, tasks to restart:$task_names"
 
 remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
-local_supervisor_conf_d="$script_directory/supervisor/$current_cli_machine"
+local_supervisor_conf_d="$script_directory/$current_cli_machine/supervisor"
 
 # replace the content of supervisor/conf.d
 rsync -av --delete $local_supervisor_conf_d/ $remote_supervisor_conf_d
