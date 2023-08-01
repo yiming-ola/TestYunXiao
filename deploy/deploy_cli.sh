@@ -34,7 +34,7 @@ fi
 
 if [ -n "$task_name" ]; then
     # get the targeted machine name from out put file of targeting.sh
-    targeted_cli_machine=$(bash "$build_directory/targeting.sh" "$task_name")
+    targeted_cli_machine=$(bash "$script_directory/targeting.sh" "$task_name")
     echo "Found $task_name running on: $targeted_cli_machine"
     # given a task name, if it belongs to the current folder($folder_name), restart it
     if [ -n "$target_cli_machine" ] && [ "$current_cli_machine" == "$target_cli_machine" ]; then
