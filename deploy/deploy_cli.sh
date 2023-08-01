@@ -14,7 +14,7 @@ current_cli_machine="$1"
 
 task_name="$2"
 
-remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
+remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor"
 
 local_supervisor_conf_d="$script_directory/supervisor/conf.d"
 
