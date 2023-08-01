@@ -22,7 +22,7 @@ local_supervisor_conf_d="$script_directory/supervisor/$current_cli_machine"
 rsync -a --delete $local_supervisor_conf_d/ $remote_supervisor_conf_d
 
 if [ $? -eq 0 ]; then
-    echo "New supervisor configs from: $build_directory."
+    echo "New supervisor configs from: $local_supervisor_conf_d"
     sudo supervisorctl reread
     sudo supervisorctl update
 else
