@@ -48,8 +48,9 @@ read -ra task_arr <<< "$task_names"
 IFS=$OLDIFS
 
 # loop through the array
-for task_name in "${task_names[@]}"; do
+for task_name in "${task_arr[@]}"; do
     if [ -n "$task_name" ]; then
+        echo "now handling: $task_name"
         # get the targeted machine name from out put file of targeting.sh
         targeted_cli_machine=$(bash "$script_directory/targeting.sh" "$task_name")
         echo "Found $task_name running on: $targeted_cli_machine"
