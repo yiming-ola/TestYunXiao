@@ -39,6 +39,6 @@ if [ -n "$task_name" ]; then
     # given a task name, if it belongs to the current folder($folder_name), restart it
     if [ -n "$targeted_cli_machine" ] && [ "$current_cli_machine" = "$targeted_cli_machine" ]; then
         echo "Restarting $task_name of $current_cli_machine..."
-        sudo supervisorctl restart task_name
+        sudo supervisorctl restart $task_name
     fi
 fi
