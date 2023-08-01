@@ -14,20 +14,19 @@ current_cli_machine="$1"
 
 task_name="$2"
 
-remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor"
+remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
-local_supervisor_conf_d="$script_directory/supervisor/conf.d"
+local_supervisor_conf_d="$script_directory/supervisor/$current_cli_machine"
 
-# rename local config folder to conf.d
-mv "$script_directory/supervisor/$current_cli_machine" $local_supervisor_conf_d
+# replace the content of supervisor/conf.d
+rsync -a --delete $local_supervisor_conf_d/ $remote_supervisor_conf_d
 
-# update symlink to webroot
-if ln -snf $local_supervisor_conf_d $remote_supervisor_conf_d; then
-    echo "New supervisor configs from: $build_directory, Symlink updated successfully."
+if [ $? -eq 0 ]; then
+    echo "New supervisor configs from: $build_directory."
     sudo supervisorctl reread
     sudo supervisorctl update
 else
-    echo "Error: Symlink update failed."
+    echo "Error: updating supervisor configs failed."
     exit 1
 fi
 
