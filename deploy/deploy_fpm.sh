@@ -65,7 +65,7 @@ sudo find $back_up_dir -type f -mtime +3 -exec rm {} \;
 
 # link the new build to application path
 
-webroot_path='/home/ecs-user/webroot/pt-oversea'
+webroot_path='/home/ecs-user/webroot/php_partying'
 
 current_target=''
 

@@ -13,6 +13,23 @@ remote_cron_dir='/home/ecs-user/.local/etc/cron.d'
 local_cron_dir="$script_directory/$current_cli_machine/crontab"
 
 # replace the content of supervisor/conf.d
-rsync -av --delete $local_cron_dir/ $remote_cron_dir
+if [ -d "$local_cron_dir"]; then
 
-cat "$remote_cron_dir/*.crontab" | crontab -
+    # delete all contab configs matching the naming pattern
+    for config_file in "$local_cron_dir"/php_partying*.crontab; do
+        if [ -f "$config_file" ]; then
+            rm "$config_file"
+        fi
+    done
+
+    # move the content of the source folder to the destination folder
+    mv "$local_cron_dir"/* "$remote_cron_dir"
+
+    if [ $? -eq 0 ]; then
+        echo "New cron tabs from: $local_cron_dir"
+        cat "$remote_cron_dir/*.crontab" | crontab -
+    else
+        echo "Error: updating crontabs failed."
+        exit 1
+    fi
+fi

@@ -21,16 +21,26 @@ remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
 local_supervisor_conf_d="$script_directory/$current_cli_machine/supervisor"
 
-# replace the content of supervisor/conf.d
-rsync -av --delete $local_supervisor_conf_d/ $remote_supervisor_conf_d
+if [ -d "$local_supervisor_conf_d"]; then
 
-if [ $? -eq 0 ]; then
-    echo "New supervisor configs from: $local_supervisor_conf_d"
-    sudo supervisorctl reread
-    sudo supervisorctl update
-else
-    echo "Error: updating supervisor configs failed."
-    exit 1
+    # delete all supervisor configs matching the naming pattern
+    for config_file in "$remote_supervisor_conf_d"/php_partying*.conf; do
+        if [ -f "$config_file" ]; then
+            rm "$config_file"
+        fi
+    done
+
+    # Move the content of the source folder to the destination folder
+    mv "$local_supervisor_conf_d"/* "$remote_supervisor_conf_d"
+
+    if [ $? -eq 0 ]; then
+        echo "New supervisor configs from: $local_supervisor_conf_d"
+        sudo supervisorctl reread
+        sudo supervisorctl update
+    else
+        echo "Error: updating supervisor configs failed."
+        exit 1
+    fi
 fi
 
 # handle restarting tasks
