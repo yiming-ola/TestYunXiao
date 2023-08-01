@@ -20,14 +20,14 @@ function process_files_recursively() {
     for file in "$current_dir"/*; do
         if [ -f "$file" ]; then
             file_name=$(basename "$file")
-            if [ "$file_name" == "$task_file_name" ] && [$found -eq 0]; then
+            if [ "$file_name" == "$task_file_name" ] && [ "$found" -eq 0]; then
                 dir_name=$(dirname "$file")
                 target_cmd=$(basename "$dir_name")
                 echo "task:$$1 found in $dir_name"
                 found=1
                 break
             fi
-        elif [ -d "$file" ] && [$found -eq 0]; then
+        elif [ -d "$file" ] && [ "$found" -eq 0 ]; then
             process_files_recursively "$file"
         fi
     done
