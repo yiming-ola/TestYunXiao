@@ -32,7 +32,7 @@ else
     exit 1
 fi
 
-if [ ! -n "$task_name" ]; then
+if [ -n "$task_name" ]; then
     # get the targeted machine name from out put file of targeting.sh
     targeted_cli_machine=$(bash "$build_directory/targeting.sh" "$task_name")
     echo "Found $task_name running on: $targeted_cli_machine"
