@@ -22,7 +22,7 @@ function process_files_recursively() {
             file_name=$(basename "$file")
             if [ "$file_name" == "$task_file_name" ] && [ "$found" -eq 0 ]; then
                 dir_name=$(dirname "$file")
-                target_cmd=$(basename "$dir_name")
+                target_cli_machine=$(basename "$dir_name")
                 found=1
                 break
             fi
