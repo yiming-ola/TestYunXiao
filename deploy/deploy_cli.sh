@@ -14,12 +14,14 @@ current_cli_machine="$1"
 
 task_name="$2"
 
+echo "current_cli_machine:$current_cli_machine, task_name=$task_name"
+
 remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
 local_supervisor_conf_d="$script_directory/supervisor/$current_cli_machine"
 
 # replace the content of supervisor/conf.d
-rsync -a --delete $local_supervisor_conf_d/ $remote_supervisor_conf_d
+rsync -av --delete $local_supervisor_conf_d/ $remote_supervisor_conf_d
 
 if [ $? -eq 0 ]; then
     echo "New supervisor configs from: $local_supervisor_conf_d"
