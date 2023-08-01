@@ -16,7 +16,10 @@ task_name="$2"
 
 remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
-local_supervisor_conf_d="$script_directory/supervisor/$current_cli_machine"
+local_supervisor_conf_d="$script_directory/supervisor/conf.d"
+
+# rename local config folder to conf.d
+mv "$script_directory/supervisor/$current_cli_machine" $local_supervisor_conf_d
 
 # update symlink to webroot
 if ln -snf $local_supervisor_conf_d $remote_supervisor_conf_d; then
