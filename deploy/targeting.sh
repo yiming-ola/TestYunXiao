@@ -12,6 +12,7 @@ task_file_name="$1.conf"
 configs_dir="$script_directory/supervisor"
 
 target_cli_machine=""
+found=false
 
 function process_files_recursively() {
     local current_dir="$1"
@@ -19,12 +20,14 @@ function process_files_recursively() {
     for file in "$current_dir"/*; do
         if [ -f "$file" ]; then
             file_name=$(basename "$file")
-            if [[ "$file_name" == "$task_file_name" ]]; then
+            if [ "$file_name" == "$task_file_name" ] && [! $found]; then
                 dir_name=$(dirname "$file")
                 target_cmd=$(basename "$dir_name")
+                echo "task:$$1 found in $dir_name"
+                found=true
                 break
             fi
-        elif [ -d "$file" ]; then
+        elif [ -d "$file" ] && [!$found]; then
             process_files_recursively "$file"
         fi
     done
