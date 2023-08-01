@@ -16,13 +16,14 @@ for dir in "$script_directory"/*/; do
     config_dir="$dir/supervisor"
     if [ -d "$config_dir" ]; then
         for file in "$config_dir"/*; do
-        if [ -f "$file" ]; then
-            file_name=$(basename "$file")
-            if [ "$file_name" == "$task_file_name" ]; then
-                target_cli_machine=$(basename "$dir")
-                break;
+            if [ -f "$file" ]; then
+                file_name=$(basename "$file")
+                if [ "$file_name" == "$task_file_name" ]; then
+                    target_cli_machine=$(basename "$dir")
+                    break;
+                fi
             fi
-        fi
+        done
     fi
 done
 
