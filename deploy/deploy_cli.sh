@@ -12,9 +12,10 @@ build_directory=$(dirname "$script_directory")
 # replace the running supervisor conf.d with the mapped folder. folder name will be given from CI.
 current_cli_machine="$1"
 
-task_name="$2"
+# tasks are separated by comma (,)
+task_names="$2"
 
-echo "current_cli_machine:$current_cli_machine, task_name=$task_name"
+echo "current cli machine:$current_cli_machine, tasks to restart:$task_names"
 
 remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
@@ -32,13 +33,30 @@ else
     exit 1
 fi
 
-if [ -n "$task_name" ]; then
-    # get the targeted machine name from out put file of targeting.sh
-    targeted_cli_machine=$(bash "$script_directory/targeting.sh" "$task_name")
-    echo "Found $task_name running on: $targeted_cli_machine"
-    # given a task name, if it belongs to the current folder($folder_name), restart it
-    if [ -n "$targeted_cli_machine" ] && [ "$current_cli_machine" = "$targeted_cli_machine" ]; then
-        echo "Restarting $task_name of $current_cli_machine..."
-        sudo supervisorctl restart $task_name
+# handle restarting tasks
+
+# save the current IFS value
+OLDIFS=$IFS
+
+# Set IFS to comma (,) as the delimiter
+IFS=','
+
+# split the tasks into an array
+read -ra task_arr <<< "$task_names"
+
+# restore IFS to its original value
+IFS=$OLDIFS
+
+# loop through the array
+for task_name in "${task_names[@]}"; do
+    if [ -n "$task_name" ]; then
+        # get the targeted machine name from out put file of targeting.sh
+        targeted_cli_machine=$(bash "$script_directory/targeting.sh" "$task_name")
+        echo "Found $task_name running on: $targeted_cli_machine"
+        # given a task name, if it belongs to the current folder($folder_name), restart it
+        if [ -n "$targeted_cli_machine" ] && [ "$current_cli_machine" = "$targeted_cli_machine" ]; then
+            echo "Restarting $task_name of $current_cli_machine..."
+            sudo supervisorctl restart $task_name
+        fi
     fi
-fi
+done
