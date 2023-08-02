@@ -21,7 +21,7 @@ remote_supervisor_conf_d="/home/ecs-user/.local/etc/supervisor/conf.d"
 
 local_supervisor_conf_d="$script_directory/$current_cli_machine/supervisor"
 
-if [ -d "$local_supervisor_conf_d"]; then
+if [ -d "$local_supervisor_conf_d" ]; then
 
     # delete all supervisor configs matching the naming pattern
     for config_file in "$remote_supervisor_conf_d"/php_partying*.conf; do

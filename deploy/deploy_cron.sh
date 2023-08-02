@@ -10,13 +10,15 @@ current_cli_machine="$1"
 
 remote_cron_dir='/home/ecs-user/.local/etc/cron.d'
 
+mkdir -p $remote_cron_dir
+
 local_cron_dir="$script_directory/$current_cli_machine/crontab"
 
 # replace the content of supervisor/conf.d
-if [ -d "$local_cron_dir"]; then
+if [ -d "$local_cron_dir" ]; then
 
     # delete all contab configs matching the naming pattern
-    for config_file in "$local_cron_dir"/php_partying*.crontab; do
+    for config_file in "$remote_cron_dir"/php_partying*.crontab; do
         if [ -f "$config_file" ]; then
             rm "$config_file"
         fi
