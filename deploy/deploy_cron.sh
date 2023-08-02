@@ -29,7 +29,7 @@ if [ -d "$local_cron_dir" ]; then
 
     if [ $? -eq 0 ]; then
         echo "New cron tabs from: $local_cron_dir"
-        cat "$remote_cron_dir/*.crontab" | crontab -
+        cat "$remote_cron_dir"/*.crontab | crontab -
     else
         echo "Error: updating crontabs failed."
         exit 1
