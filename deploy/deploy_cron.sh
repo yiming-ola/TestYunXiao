@@ -20,6 +20,7 @@ if [ -d "$local_cron_dir" ]; then
     # delete all contab configs matching the naming pattern
     for config_file in "$remote_cron_dir"/php_partying*.crontab; do
         if [ -f "$config_file" ]; then
+            echo "deleting: $config_file"
             rm "$config_file"
         fi
     done

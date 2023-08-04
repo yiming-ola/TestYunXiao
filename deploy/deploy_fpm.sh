@@ -8,13 +8,15 @@ script_directory=$(dirname "$script_path")
 
 # Get the parent directory of the script's directory, should be something like /etc/ecs-user/webroot_new_builds/${TIMESTAMP}
 build_directory=$(dirname "$script_directory")
-build_name=$(basename "$build_directory")
+builds_repo=$(dirname "$build_directory")
 
 local_setting="$script_directory/nginx/nginx_settings.conf"
 sites_available='/home/ecs-user/.local/etc/nginx/sites-available'
 enabled_setting='/home/ecs-user/.local/etc/nginx/sites-enabled/'
 remote_setting="$sites_available/default"
 back_up_dir="$sites_available/back_up"
+
+fixed_build="$builds_repo/php_partying"
 
 if [ ! -e $remote_setting ]; then
     mkdir -p $sites_available
@@ -55,8 +57,8 @@ else
         echo "Nginx configuration test failed!!!! restore changes to the config."
 
         # restore config file
-        cp $back_up_file $remote_setting
-        rm -rf $back_up_file
+        cp "$back_up_file" "$remote_setting"
+        rm -rf "$back_up_file"
     fi
 fi
 
@@ -69,20 +71,47 @@ webroot_path='/home/ecs-user/webroot/php_partying'
 
 current_target=''
 
+# important: cli tasks resolve symlink and use the resolved absolute path.
+# in this case, the real name of the build should be fixed, otherwise cli task fails to locate resources.
 if [ -e "$webroot_path" ]; then
     current_target=$(readlink -f "$webroot_path")
-    echo "old symlink to the build: $current_target"
-fi
+    echo "Symlink to the build: $current_target"
 
-# update symlink to webroot
-if ln -snf $build_directory $webroot_path; then
-    echo "New build: $build_directory, Symlink updated successfully."
+    # duplicate a copy
+    copy="$builds_repo/php_partying_copy/"
+    rsync -av "$build_directory/" "$builds_repo/php_partying_copy/"
+
+    # Update the symlink to the newly unzipped build
+    ln -snf "$build_directory" "$webroot_path"
+    echo "Update the symlink to the newly unzipped build : $build_directory"
+
+    # delete the old build
+    if [ -n "$current_target" ] && [ -d $current_target ]; then
+        rm -r "$current_target"
+    fi
+
+    # rename the copy to $fixed_build
+    mv "$copy" "$fixed_build"
+
+    # Symlink back to $fixed_build
+    ln -snf "$fixed_build" "$webroot_path"
+    echo "Fixed build updated."
+
+    # Delete the newly unzipped build
+    rm -r "$build_directory"
+    echo "$build_directory deleted."
+
 else
-    echo "Error: Symlink update failed."
-    exit 1
-fi
+    # Rename the newly unzipped build to $fixed_build
+    mv "$build_directory" "$fixed_build"
 
-# delete old build
-if [ -n "$current_target" ] && [ -d $current_target ]; then
-    rm -r "$current_target"
+    # Symlink to webroot
+    if ln -snf "$fixed_build" "$webroot_path"; then
+        echo "New build: $fixed_build, Symlink updated successfully."
+        sudo systemctl reload php7.2-fpm
+        exit 0
+    else
+        echo "Error: Symlink update failed."
+        exit 1
+    fi
 fi

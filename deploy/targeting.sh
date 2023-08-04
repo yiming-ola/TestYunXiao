@@ -27,4 +27,6 @@ for dir in "$script_directory"/*/; do
     fi
 done
 
+# test
+
 echo $target_cli_machine
