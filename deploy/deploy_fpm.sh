@@ -16,6 +16,8 @@ enabled_setting='/home/ecs-user/.local/etc/nginx/sites-enabled/'
 remote_setting="$sites_available/default"
 back_up_dir="$sites_available/back_up"
 
+mkdir -p '/home/ecs-user/log/php_partying'
+
 fixed_build="$builds_repo/php_partying"
 
 if [ ! -e $remote_setting ]; then
@@ -87,11 +89,18 @@ if [ -e "$webroot_path" ]; then
 
     # delete the old build
     if [ -n "$current_target" ] && [ -d $current_target ]; then
-        rm -r "$current_target"
-    fi
+        # rename the old build
+        new_name="$builds_repo/php_partying_old"
+        mv "$current_target" $new_name
 
-    # rename the copy to $fixed_build
-    mv "$copy" "$fixed_build"
+        # rename the copy to $fixed_build
+        mv "$copy" "$fixed_build"
+
+        rm -r "$new_name"
+    else
+        # rename the copy to $fixed_build
+        mv "$copy" "$fixed_build"
+    fi
 
     # Symlink back to $fixed_build
     ln -snf "$fixed_build" "$webroot_path"
@@ -100,6 +109,9 @@ if [ -e "$webroot_path" ]; then
     # Delete the newly unzipped build
     rm -r "$build_directory"
     echo "$build_directory deleted."
+
+    sudo systemctl reload php7.2-fpm
+    exit 0
 
 else
     # Rename the newly unzipped build to $fixed_build
