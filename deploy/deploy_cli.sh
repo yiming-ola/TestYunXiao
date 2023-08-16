@@ -26,6 +26,7 @@ if [ -d "$local_supervisor_conf_d" ]; then
     # delete all supervisor configs matching the naming pattern
     for config_file in "$remote_supervisor_conf_d"/php_partying*.conf; do
         if [ -f "$config_file" ]; then
+            echo "deleting: $config_file"
             rm "$config_file"
         fi
     done
@@ -45,17 +46,8 @@ fi
 
 # handle restarting tasks
 
-# save the current IFS value
-OLDIFS=$IFS
-
-# Set IFS to comma (,) as the delimiter
-IFS=','
-
 # split the tasks into an array
 read -ra task_arr <<< "$task_names"
-
-# restore IFS to its original value
-IFS=$OLDIFS
 
 # loop through the array
 for task_name in "${task_arr[@]}"; do
@@ -64,10 +56,15 @@ for task_name in "${task_arr[@]}"; do
         # get the targeted machine name from out put file of targeting.sh
         targeted_cli_machine=$(bash "$script_directory/targeting.sh" "$task_name")
         echo "Found $task_name running on: $targeted_cli_machine"
-        # given a task name, if it belongs to the current folder($folder_name), restart it
-        if [ -n "$targeted_cli_machine" ] && [ "$current_cli_machine" = "$targeted_cli_machine" ]; then
-            echo "Restarting $task_name of $current_cli_machine..."
-            sudo supervisorctl restart $task_name
-        fi
+
+        read -ra cli_arr <<< "$targeted_cli_machine"
+
+        for cli_machine in "${cli_arr[@]}"; do
+            # given a task name, if it belongs to the current folder($folder_name), restart it
+            if [ -n "$cli_machine" ] && [ "$current_cli_machine" = "$cli_machine" ]; then
+                echo "Restarting $task_name of $current_cli_machine..."
+                sudo supervisorctl restart $task_name
+            fi
+        done
     fi
 done

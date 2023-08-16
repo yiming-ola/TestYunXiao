@@ -8,7 +8,7 @@ script_directory=$(dirname "$script_path")
 
 task_file_name="$1.conf"
 
-target_cli_machine=""
+target_cli_machine=()
 
 # loop through config files to locate where the task is
 for dir in "$script_directory"/*/; do
@@ -19,7 +19,7 @@ for dir in "$script_directory"/*/; do
             if [ -f "$file" ]; then
                 file_name=$(basename "$file")
                 if [ "$file_name" == "$task_file_name" ]; then
-                    target_cli_machine=$(basename "$dir")
+                    target_cli_machine+=$(basename "$dir")
                     break;
                 fi
             fi
@@ -29,4 +29,4 @@ done
 
 # test
 
-echo $target_cli_machine
+echo "${target_cli_machine[@]}"
