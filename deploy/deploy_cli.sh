@@ -32,7 +32,7 @@ if [ -d "$local_supervisor_conf_d" ]; then
     done
 
     # Move the content of the source folder to the destination folder
-    mv "$local_supervisor_conf_d"/* "$remote_supervisor_conf_d"
+    cp "$local_supervisor_conf_d"/* "$remote_supervisor_conf_d"
 
     if [ $? -eq 0 ]; then
         echo "New supervisor configs from: $local_supervisor_conf_d"

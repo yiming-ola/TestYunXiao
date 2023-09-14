@@ -26,7 +26,7 @@ if [ -d "$local_cron_dir" ]; then
     done
 
     # move the content of the source folder to the destination folder
-    mv "$local_cron_dir"/* "$remote_cron_dir"
+    cp "$local_cron_dir"/* "$remote_cron_dir"
 
     if [ $? -eq 0 ]; then
         echo "New cron tabs from: $local_cron_dir"
