@@ -1,1 +1,0 @@
-0 5 * * * php /home/ecs-user/webroot/php_partying/tutorial/app/cli.php main test cmd2 crontab1
